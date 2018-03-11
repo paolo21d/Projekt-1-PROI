@@ -8,8 +8,27 @@
 #include <bitset>
 #include <iostream>
 
-class Bitowe {
+#define N 20
 
+class Bitowe {
+    std::bitset<N> pole;
+
+public:
+    Bitowe();
+    Bitowe (long long liczba);
+    Bitowe(std::string var);
+
+    bool wczytajStringBinarny();
+    bool wczytajStringDecymalny();
+    Bitowe operator+(const Bitowe &p);
+    Bitowe operator-(const Bitowe &p);
+    Bitowe operator*(const Bitowe &p);
+    Bitowe & operator=(const Bitowe &p);
+    bool operator==(const Bitowe &p);
+    bool operator>(const Bitowe &p);
+    bool operator<(const Bitowe &p);
+    friend std::ostream &operator<<(std::ostream &out, const Bitowe &p);
+    //friend std::istream &operator>>(std::istream &input, const Bitowe &p);
 };
 
 
