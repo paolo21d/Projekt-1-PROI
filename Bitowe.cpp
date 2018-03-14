@@ -2,6 +2,7 @@
 // Created by paolo on 11.03.2018.
 //
 
+#include <algorithm>
 #include "Bitowe.h"
 
 using namespace std;
@@ -14,20 +15,35 @@ Bitowe::Bitowe(string var) {
 
 }
 
-Bitowe::Bitowe(unsigned long long liczba) {
+Bitowe::Bitowe(long long liczba) {
     int i = 0;
+    if(liczba<0){
+        liczba=-liczba;
+        ujemna=true;
+    }
     while (liczba != 0) {
         this->pole[i] = liczba % 2;
         liczba %= 2;
         i++;
     }
+    ujemna=false;
 }
 
 bool Bitowe::wczytajStringBinarny() {
     string s;
     cin >> s;
-    s.reserve();
-    for (int i = 0; i < s.length(); i++) {
+    //s.reserve();
+    int koniec;
+    if(s[0]=='-') {
+        koniec=s.length()-1;
+        this->ujemna= true;
+    }else{
+        this->ujemna= false;
+        koniec=s.length();
+    }
+    //s.reserve();
+    reverse(s.begin(),s.end());
+    for (int i = 0; i < koniec; i++) {
         if (s[i] == '0')
             this->pole[i] = false;
         else if (s[i] == '1')

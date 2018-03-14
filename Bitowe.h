@@ -12,18 +12,19 @@
 
 class Bitowe {
     std::bitset<N> pole;
-
+    bool ujemna;
 public:
     Bitowe();
-    Bitowe (unsigned long long liczba);
+    Bitowe(long long liczba);
     Bitowe(std::string var);
-
+    
+    //~Bitowe();
     bool wczytajStringBinarny();
     bool wczytajStringDecymalny();
     Bitowe operator+(const Bitowe &p);
     Bitowe operator-(const Bitowe &p);
     Bitowe operator*(const Bitowe &p);
-    Bitowe & operator=(const Bitowe &p);
+    Bitowe &operator=(const Bitowe &p);
     bool operator==(const Bitowe &p);
     bool operator>(const Bitowe &p);
     bool operator<(const Bitowe &p);
