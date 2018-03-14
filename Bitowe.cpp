@@ -14,7 +14,7 @@ Bitowe::Bitowe(string var) {
 
 }
 
-Bitowe::Bitowe(long long liczba) {
+Bitowe::Bitowe(unsigned long long liczba) {
     int i = 0;
     while (liczba != 0) {
         this->pole[i] = liczba % 2;

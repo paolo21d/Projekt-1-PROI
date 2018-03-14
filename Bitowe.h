@@ -15,7 +15,7 @@ class Bitowe {
 
 public:
     Bitowe();
-    Bitowe (long long liczba);
+    Bitowe (unsigned long long liczba);
     Bitowe(std::string var);
 
     bool wczytajStringBinarny();
