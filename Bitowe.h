@@ -17,18 +17,22 @@ public:
     Bitowe();
     Bitowe(long long liczba);
     Bitowe(std::string var);
-    
+    Bitowe(std::bitset<N> lista);
+
     //~Bitowe();
     bool wczytajStringBinarny();
     bool wczytajStringDecymalny();
-    Bitowe operator+(const Bitowe &p);
-    Bitowe operator-(const Bitowe &p);
-    Bitowe operator*(const Bitowe &p);
+
     Bitowe &operator=(const Bitowe &p);
-    bool operator==(const Bitowe &p);
-    bool operator>(const Bitowe &p);
-    bool operator<(const Bitowe &p);
+
     friend std::ostream &operator<<(std::ostream &out, const Bitowe &p);
+    friend Bitowe operator+ (const Bitowe &l, const Bitowe &p);
+    friend Bitowe operator- (const Bitowe &l, const Bitowe &p);
+    friend Bitowe operator* (const Bitowe &l, const Bitowe &p);
+    friend Bitowe operator/ (const Bitowe &l, const Bitowe &p);
+    friend bool operator> (const Bitowe &l, const Bitowe &p);
+    friend bool operator< (const Bitowe &l, const Bitowe &p);
+    friend bool operator== (const Bitowe &l, const Bitowe &p);
     //friend std::istream &operator>>(std::istream &input, const Bitowe &p);
 };
 
