@@ -22,8 +22,11 @@ public:
     //~Bitowe();
     bool wczytajStringBinarny();
     bool wczytajStringDecymalny();
-
     Bitowe &operator=(const Bitowe &p);
+
+    static void porownajLiczby(const Bitowe &l, const Bitowe &p);
+    void wypiszBinarnie();
+    void wypiszDecymalnie();
 
     friend std::ostream &operator<<(std::ostream &out, const Bitowe &p);
     friend Bitowe operator+ (const Bitowe &l, const Bitowe &p);

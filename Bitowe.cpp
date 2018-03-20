@@ -12,6 +12,7 @@ Bitowe::Bitowe() {
 }
 
 Bitowe::Bitowe(std::bitset<N> lista) {
+    ujemna = 0;
     for (int i = 0; i < N; ++i) {
         pole[i] = lista[i];
     }
@@ -63,8 +64,9 @@ bool Bitowe::wczytajStringBinarny() {
 }
 
 bool Bitowe::wczytajStringDecymalny() {
-    string s;
-    while (!(cin >> s)) {
+    string s, znak;
+    cout<<"Podaj znak +/- a nastepnie po spacji liczbe w postaci dziesietnej."<<endl;
+    while (!(cin >> znak >> s )) {
         cout << "Blad podaj jeszcze raz!" << endl;
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -74,9 +76,9 @@ bool Bitowe::wczytajStringDecymalny() {
 
 Bitowe &Bitowe::operator=(const Bitowe &p) {
     this->ujemna = p.ujemna;
-    for(int i=0; i<N; i++)
+    for (int i = 0; i < N; i++)
         this->pole[i] = p.pole[i];
-    return  *this;
+    return *this;
 }
 
 /*Bitowe Bitowe::operator+(const Bitowe &p) {
@@ -122,6 +124,8 @@ bool operator<(const Bitowe &l, const Bitowe &p) {
     return false;
 }
 bool operator==(const Bitowe &l, const Bitowe &p) {
+    if(l.ujemna != p.ujemna)
+        return false;
     for (int i = 0; i < N; i++) {
         if (l.pole[i] != p.pole[i])
             return false;
@@ -163,7 +167,7 @@ Bitowe operator+(const Bitowe &l, const Bitowe &p) {
     Bitowe tmp;
     if ((l.ujemna == 0 && p.ujemna == 0) || (l.ujemna == 1 && p.ujemna == 1)) {
         int c = 0;
-        tmp.ujemna=l.ujemna;
+        tmp.ujemna = l.ujemna;
         for (int i = 0; i < N; ++i) {
             tmp.pole[i] = (l.pole[i] + p.pole[i] + c) % 2;
             c = (l.pole[i] + p.pole[i] + c) / 2;
@@ -173,60 +177,70 @@ Bitowe operator+(const Bitowe &l, const Bitowe &p) {
             return l;
         }
         return tmp;
-    }else if (l.ujemna == 1 && p.ujemna == 0) {
+    } else if (l.ujemna == 1 && p.ujemna == 0) {
         Bitowe lzast = l;
         lzast.ujemna = 0;
-        tmp = p-lzast;
+        tmp = p - lzast;
         return tmp;
     } else if (l.ujemna == 0 && p.ujemna == 1) {
         Bitowe pzast = p;
-        pzast.ujemna=0;
-        tmp = l-pzast;
-        return  tmp;
+        pzast.ujemna = 0;
+        tmp = l - pzast;
+        return tmp;
     }
 
 }
 
 Bitowe operator-(const Bitowe &l, const Bitowe &p) {
-   /* int carry = 0;
-    bitset<N> temp;
-    temp.reset();
-    if ((l.ujemna == 0 && p.ujemna == 0) || (l.ujemna == 1 && p.ujemna == 1)) {
+    /* int carry = 0;
+     bitset<N> temp;
+     temp.reset();
+     if ((l.ujemna == 0 && p.ujemna == 0) || (l.ujemna == 1 && p.ujemna == 1)) {
 
-    } else if (l.ujemna == 1 && p.ujemna == 0) {
+     } else if (l.ujemna == 1 && p.ujemna == 0) {
 
-    } else if (l.ujemna == 0 && p.ujemna == 1) {
+     } else if (l.ujemna == 0 && p.ujemna == 1) {
 
-    }*/
+     }*/
 
     Bitowe tmp;
     int tab[N];
     /// jeszcze dodac warunki na 1) + (-) + l<p     2) - (-) + l<p
-    if((l.ujemna==0 && p.ujemna==0 && l>p) || (l.ujemna==1 && p.ujemna==1 && l>p)){
-        tmp.ujemna=l.ujemna;
-        int c=0;
+    if ((l.ujemna == 0 && p.ujemna == 0 && l > p) || (l.ujemna == 1 && p.ujemna == 1 && l > p)) {
+        tmp.ujemna = l.ujemna;
+        int c = 0;
         for (int i = 0; i < N; ++i) {
-            tab[i] = l.pole[i] - p.pole[i] +c;
-            if(tab[i]<0){
-                tab[i] +=2;
-                c=-1;
-            }else
-                c=0;
+            tab[i] = l.pole[i] - p.pole[i] + c;
+            if (tab[i] < 0) {
+                tab[i] += 2;
+                c = -1;
+            } else
+                c = 0;
         }
         for (int i = 0; i < N; ++i) {
             tmp.pole[i] = tab[i];
         }
-        return  tmp;
-    }else if(l.ujemna==1 && p.ujemna==0){
+        return tmp;
+    } else if (l.ujemna == 0 && p.ujemna == 0 && l < p) {
+        tmp = p - l;
+        tmp.ujemna = 1;
+        return tmp;
+    } else if (l.ujemna == 1 && p.ujemna == 1 && l < p) {
+        Bitowe pzast = p;
+        pzast.ujemna = 0;
+        tmp = pzast + l;
+        tmp.ujemna = 0;
+        return tmp;
+    } else if (l.ujemna == 1 && p.ujemna == 0) {
         Bitowe lzast = l;
-        lzast.ujemna=0;
-        tmp = lzast+p;
-        tmp.ujemna=1;
-        return  tmp;
-    }else if(l.ujemna==0 && p.ujemna==1){
-        Bitowe pzast=p;
-        pzast.ujemna=0;
-        tmp = l+pzast;
+        lzast.ujemna = 0;
+        tmp = lzast + p;
+        tmp.ujemna = 1;
+        return tmp;
+    } else if (l.ujemna == 0 && p.ujemna == 1) {
+        Bitowe pzast = p;
+        pzast.ujemna = 0;
+        tmp = l + pzast;
         return tmp;
     }
 }
@@ -237,6 +251,33 @@ Bitowe operator*(const Bitowe &l, const Bitowe &p) {
 
 Bitowe operator/(const Bitowe &l, const Bitowe &p) {
     return Bitowe();
+}
+void Bitowe::porownajLiczby(const Bitowe &l, const Bitowe &p) {
+    if(l==p){
+        cout<<"Liczby sa rowne"<<endl;
+    }else if(l.ujemna==0 && p.ujemna==1){
+        cout<<"Pierwsza liczba jest wieksza od drugiaj"<<endl;
+    }else if(l.ujemna==1 && p.ujemna==0){
+        cout<<"Pierwsza liczba jest mniejsza od drugiej"<<endl;
+    }else if(l.ujemna==0 && p.ujemna==0 && l<p){
+        cout<<"Pierwsza liczba jest mniejsza od drugiej"<<endl;
+    }else if(l.ujemna==0 && p.ujemna==0 && l>p){
+        cout<<"Pierwsza liczba jest wieksza od drugiej"<<endl;
+    }else if(l.ujemna ==1 && p.ujemna==1 && l<p){
+        cout<<"Pierwsza liczba jest wieksza od drugiej"<<endl;
+    }else if(l.ujemna==1 && p.ujemna==1 && l>p){
+        cout<<"Pierwsza liczba jest mniejsza od drugiej"<<endl;
+    }else {
+        cout<<"Error!"<<endl;
+    }
+}
+void Bitowe::wypiszBinarnie() {
+    for (int i = N-1; i >= 0 ; --i) {
+        cout<<this->pole[i];
+    }
+}
+void Bitowe::wypiszDecymalnie() {
+
 }
 
 
