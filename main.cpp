@@ -29,6 +29,7 @@ int main() {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
+
         if(opcja==1){
             lista.push_back(Bitowe());
             lista.back().wczytajStringDecymalny();
@@ -46,7 +47,12 @@ int main() {
         }else if(opcja==7){
 
         }else if(opcja==8){
-
+            cout<<"Lista liczb:"<<endl;
+            for (int i = 0; i < lista.size(); ++i) {
+                cout<<i<<": ";
+                lista[i].wypiszDecymalnie();
+                cout<<endl;
+            }
         }else if(opcja==9){
             cout<<"Lista liczb:"<<endl;
             for (int i = 0; i < lista.size(); ++i) {

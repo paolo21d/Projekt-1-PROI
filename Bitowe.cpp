@@ -37,26 +37,33 @@ Bitowe::Bitowe(long long liczba) {
 }
 
 bool Bitowe::wczytajStringBinarny() {
-    string s;
-    cin >> s;
+    string s, znak;
+    cout<<"Podaj znak +/- a nastepnie po spacji liczbe w postaci binarnej."<<endl;
+    while (!(cin >> znak >> s )) {
+        cout << "Blad podaj jeszcze raz!" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
     //s.reserve();
     int koniec;
-    if (s[0] == '-') {
-        koniec = s.length() - 1;
+    if (znak == '-') {
         this->ujemna = true;
-    } else {
+    } else if(znak == '+'){
         this->ujemna = false;
-        koniec = s.length();
+    }else{
+        cout<<"Blad wprowadzania danych!"<<endl;
+        return false;
     }
     //s.reserve();
     reverse(s.begin(), s.end());
-    for (int i = 0; i < koniec; i++) {
+    for (int i = 0; i < s.length(); i++) {
         if (s[i] == '0')
             this->pole[i] = false;
         else if (s[i] == '1')
             this->pole[i] = true;
         else {
             this->pole.reset();
+            cout<<"Blad wprowadzania danych!"<<endl;
             return false;
         }
     }
