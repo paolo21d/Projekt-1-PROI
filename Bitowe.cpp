@@ -3,6 +3,7 @@
 //
 
 #include <algorithm>
+#include <iostream>
 #include "Bitowe.h"
 
 using namespace std;
@@ -38,8 +39,8 @@ Bitowe::Bitowe(long long liczba) {
 
 bool Bitowe::wczytajStringBinarny() {
     string s, znak;
-    cout<<"Podaj znak +/- a nastepnie po spacji liczbe w postaci binarnej."<<endl;
-    while (!(cin >> znak >> s )) {
+    cout << "Podaj znak +/- a nastepnie po spacji liczbe w postaci binarnej." << endl;
+    while (!(cin >> znak >> s)) {
         cout << "Blad podaj jeszcze raz!" << endl;
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -48,10 +49,10 @@ bool Bitowe::wczytajStringBinarny() {
     int koniec;
     if (znak == '-') {
         this->ujemna = true;
-    } else if(znak == '+'){
+    } else if (znak == '+') {
         this->ujemna = false;
-    }else{
-        cout<<"Blad wprowadzania danych!"<<endl;
+    } else {
+        cout << "Blad wprowadzania danych!" << endl;
         return false;
     }
     //s.reserve();
@@ -63,7 +64,7 @@ bool Bitowe::wczytajStringBinarny() {
             this->pole[i] = true;
         else {
             this->pole.reset();
-            cout<<"Blad wprowadzania danych!"<<endl;
+            cout << "Blad wprowadzania danych!" << endl;
             return false;
         }
     }
@@ -72,8 +73,8 @@ bool Bitowe::wczytajStringBinarny() {
 
 bool Bitowe::wczytajStringDecymalny() {
     string s, znak;
-    cout<<"Podaj znak +/- a nastepnie po spacji liczbe w postaci dziesietnej."<<endl;
-    while (!(cin >> znak >> s )) {
+    cout << "Podaj znak +/- a nastepnie po spacji liczbe w postaci dziesietnej." << endl;
+    while (!(cin >> znak >> s)) {
         cout << "Blad podaj jeszcze raz!" << endl;
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -92,7 +93,7 @@ Bitowe &Bitowe::operator=(const Bitowe &p) {
     int carry = 0;
     bitset<N> tmp;
     tmp.reset();
-    if ((this->ujemna == 0 && p.ujemna == 0) || (this->ujemna == 1 && p.ujemna == 1)) {
+    if ((this->ujemna == 0 && !p.ujemna) || (this->ujemna == 1 && p.ujemna)) {
         for (int i = 0; i < N; i++) {
             carry = p.pole[i] + this->pole[i] + carry;
             tmp[i] = carry % 2;
@@ -107,16 +108,18 @@ Bitowe &Bitowe::operator=(const Bitowe &p) {
             this->pole[i] = tmp[i];
         }
         return *this;
-    } else if (this->ujemna == 1 && p.ujemna == 0) {
+    } else if (this->ujemna == 1 && !p.ujemna) {
         this->ujemna = 0;
         *this = p - *this;
-    } else if (this->ujemna == 0 && p.ujemna == 1) {
+    } else if (this->ujemna == 0 && p.ujemna) {
 
     }
 }*/
 
 ///////Porownywanie
 bool operator>(const Bitowe &l, const Bitowe &p) {
+    if (l.ujemna && !p.ujemna)
+        return false;
     for (int i = N - 1; i >= 0; i--) {
         if (l.pole[i] == 1 && p.pole[i] == 0)
             return true;
@@ -124,6 +127,8 @@ bool operator>(const Bitowe &l, const Bitowe &p) {
     return false;
 }
 bool operator<(const Bitowe &l, const Bitowe &p) {
+    if (!l.ujemna && p.ujemna)
+        return false;
     for (int i = N - 1; i >= 0; i--) {
         if (l.pole[i] == 0 && p.pole[i] == 1)
             return true;
@@ -131,7 +136,7 @@ bool operator<(const Bitowe &l, const Bitowe &p) {
     return false;
 }
 bool operator==(const Bitowe &l, const Bitowe &p) {
-    if(l.ujemna != p.ujemna)
+    if (l.ujemna != p.ujemna)
         return false;
     for (int i = 0; i < N; i++) {
         if (l.pole[i] != p.pole[i])
@@ -141,14 +146,18 @@ bool operator==(const Bitowe &l, const Bitowe &p) {
 }
 
 ostream &operator<<(ostream &out, const Bitowe &p) {
-    return out << p; //za p wstawić to co ma się wyświelić
+    if (p.ujemna)
+        out << "- ";
+    for (int i = N - 1; i >= 0; i--)
+        out << p.pole[i];
+    return out;
 }
 //////Operatory arytmetyczne
 Bitowe operator+(const Bitowe &l, const Bitowe &p) {
     /*int carry = 0;
     bitset<N> tmp;
     tmp.reset();
-    if ((l.ujemna == 0 && p.ujemna == 0) || (l.ujemna == 1 && p.ujemna == 1)) {
+    if ((!l.ujemna && !p.ujemna) || (l.ujemna && p.ujemna)) {
         for (int i = 0; i < N; i++) {
             carry = p.pole[i] + l.pole[i] + carry;
             tmp[i] = carry % 2;
@@ -163,16 +172,16 @@ Bitowe operator+(const Bitowe &l, const Bitowe &p) {
             this->pole[i] = tmp[i];
         }
         return Bitowe(tmp);
-    } else if (l.ujemna == 1 && p.ujemna == 0) {
+    } else if (l.ujemna && !p.ujemna) {
         this->ujemna = 0;
         *this = p - l;
-    } else if (l.ujemna == 0 && p.ujemna == 1) {
+    } else if (!l.ujemna && p.ujemna) {
 
     }*/
 
 
     Bitowe tmp;
-    if ((l.ujemna == 0 && p.ujemna == 0) || (l.ujemna == 1 && p.ujemna == 1)) {
+    if ((!l.ujemna && !p.ujemna) || (l.ujemna && p.ujemna)) {
         int c = 0;
         tmp.ujemna = l.ujemna;
         for (int i = 0; i < N; ++i) {
@@ -184,14 +193,14 @@ Bitowe operator+(const Bitowe &l, const Bitowe &p) {
             return l;
         }
         return tmp;
-    } else if (l.ujemna == 1 && p.ujemna == 0) {
+    } else if (l.ujemna && !p.ujemna) {
         Bitowe lzast = l;
-        lzast.ujemna = 0;
+        lzast.ujemna = false;
         tmp = p - lzast;
         return tmp;
-    } else if (l.ujemna == 0 && p.ujemna == 1) {
+    } else if (!l.ujemna && p.ujemna) {
         Bitowe pzast = p;
-        pzast.ujemna = 0;
+        pzast.ujemna = false;
         tmp = l - pzast;
         return tmp;
     }
@@ -202,18 +211,18 @@ Bitowe operator-(const Bitowe &l, const Bitowe &p) {
     /* int carry = 0;
      bitset<N> temp;
      temp.reset();
-     if ((l.ujemna == 0 && p.ujemna == 0) || (l.ujemna == 1 && p.ujemna == 1)) {
+     if ((!l.ujemna && !p.ujemna) || (l.ujemna && p.ujemna)) {
 
-     } else if (l.ujemna == 1 && p.ujemna == 0) {
+     } else if (l.ujemna && !p.ujemna) {
 
-     } else if (l.ujemna == 0 && p.ujemna == 1) {
+     } else if (!l.ujemna && p.ujemna) {
 
      }*/
 
     Bitowe tmp;
     int tab[N];
     /// jeszcze dodac warunki na 1) + (-) + l<p     2) - (-) + l<p
-    if ((l.ujemna == 0 && p.ujemna == 0 && l > p) || (l.ujemna == 1 && p.ujemna == 1 && l > p)) {
+    if ((!l.ujemna && !p.ujemna && l.modul() > p.modul()) || (l.ujemna && p.ujemna && l.modul() > p.modul())) {
         tmp.ujemna = l.ujemna;
         int c = 0;
         for (int i = 0; i < N; ++i) {
@@ -228,25 +237,25 @@ Bitowe operator-(const Bitowe &l, const Bitowe &p) {
             tmp.pole[i] = tab[i];
         }
         return tmp;
-    } else if (l.ujemna == 0 && p.ujemna == 0 && l < p) {
+    } else if (!l.ujemna && !p.ujemna && l.modul() < p.modul()) {
         tmp = p - l;
-        tmp.ujemna = 1;
+        tmp.ujemna = true;
         return tmp;
-    } else if (l.ujemna == 1 && p.ujemna == 1 && l < p) {
+    } else if (l.ujemna && p.ujemna && l.modul() < p.modul()) {
         Bitowe pzast = p;
-        pzast.ujemna = 0;
+        pzast.ujemna = false;
         tmp = pzast + l;
-        tmp.ujemna = 0;
+        tmp.ujemna = false;
         return tmp;
-    } else if (l.ujemna == 1 && p.ujemna == 0) {
+    } else if (l.ujemna && !p.ujemna) {
         Bitowe lzast = l;
-        lzast.ujemna = 0;
+        lzast.ujemna = false;
         tmp = lzast + p;
-        tmp.ujemna = 1;
+        tmp.ujemna = true;
         return tmp;
-    } else if (l.ujemna == 0 && p.ujemna == 1) {
+    } else if (!l.ujemna && p.ujemna) {
         Bitowe pzast = p;
-        pzast.ujemna = 0;
+        pzast.ujemna = false;
         tmp = l + pzast;
         return tmp;
     }
@@ -260,31 +269,45 @@ Bitowe operator/(const Bitowe &l, const Bitowe &p) {
     return Bitowe();
 }
 void Bitowe::porownajLiczby(const Bitowe &l, const Bitowe &p) {
-    if(l==p){
-        cout<<"Liczby sa rowne"<<endl;
-    }else if(l.ujemna==0 && p.ujemna==1){
-        cout<<"Pierwsza liczba jest wieksza od drugiaj"<<endl;
-    }else if(l.ujemna==1 && p.ujemna==0){
-        cout<<"Pierwsza liczba jest mniejsza od drugiej"<<endl;
-    }else if(l.ujemna==0 && p.ujemna==0 && l<p){
-        cout<<"Pierwsza liczba jest mniejsza od drugiej"<<endl;
-    }else if(l.ujemna==0 && p.ujemna==0 && l>p){
-        cout<<"Pierwsza liczba jest wieksza od drugiej"<<endl;
-    }else if(l.ujemna ==1 && p.ujemna==1 && l<p){
-        cout<<"Pierwsza liczba jest wieksza od drugiej"<<endl;
-    }else if(l.ujemna==1 && p.ujemna==1 && l>p){
-        cout<<"Pierwsza liczba jest mniejsza od drugiej"<<endl;
-    }else {
-        cout<<"Error!"<<endl;
+    /*if (l == p) {
+        cout << "Liczby sa rowne" << endl;
+    } else if (!l.ujemna && p.ujemna) {
+        cout << "Pierwsza liczba jest wieksza od drugiaj" << endl;
+    } else if (l.ujemna && !p.ujemna) {
+        cout << "Pierwsza liczba jest mniejsza od drugiej" << endl;
+    } else if (!l.ujemna && !p.ujemna && l < p) {
+        cout << "Pierwsza liczba jest mniejsza od drugiej" << endl;
+    } else if (!l.ujemna && !p.ujemna && l > p) {
+        cout << "Pierwsza liczba jest wieksza od drugiej" << endl;
+    } else if (l.ujemna && p.ujemna && l < p) {
+        cout << "Pierwsza liczba jest wieksza od drugiej" << endl;
+    } else if (l.ujemna && p.ujemna && l > p) {
+        cout << "Pierwsza liczba jest mniejsza od drugiej" << endl;
+    } else {
+        cout << "Error!" << endl;
+    }*/
+    if (l == p) {
+        cout << "Liczby sa rowne" << endl;
+    } else if (l < p) {
+        cout << "Pierwsza liczba jest mniejsza od drugiej" << endl;
+    } else if (l > p) {
+        cout << "Pierwsza liczba jest wieksza od drugiej" << endl;
+    } else {
+        cout << "Error!" << endl;
     }
 }
 void Bitowe::wypiszBinarnie() {
-    for (int i = N-1; i >= 0 ; --i) {
-        cout<<this->pole[i];
+    for (int i = N - 1; i >= 0; --i) {
+        cout << this->pole[i];
     }
 }
 void Bitowe::wypiszDecymalnie() {
 
+}
+Bitowe Bitowe::modul() const {
+    Bitowe tmp = *this;
+    tmp.ujemna = false;
+    return tmp;
 }
 
 

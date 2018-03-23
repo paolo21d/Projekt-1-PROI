@@ -27,6 +27,7 @@ public:
     static void porownajLiczby(const Bitowe &l, const Bitowe &p);
     void wypiszBinarnie();
     void wypiszDecymalnie();
+    Bitowe modul() const;
 
     friend std::ostream &operator<<(std::ostream &out, const Bitowe &p);
     friend Bitowe operator+ (const Bitowe &l, const Bitowe &p);
