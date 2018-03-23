@@ -47,9 +47,9 @@ bool Bitowe::wczytajStringBinarny() {
     }
     //s.reserve();
     int koniec;
-    if (znak == '-') {
+    if (znak == "-") {
         this->ujemna = true;
-    } else if (znak == '+') {
+    } else if(znak == "+"){
         this->ujemna = false;
     } else {
         cout << "Blad wprowadzania danych!" << endl;
@@ -310,7 +310,20 @@ Bitowe Bitowe::modul() const {
     return tmp;
 }
 
-
+Bitowe operator<< (const Bitowe &l, int ilosc){
+    Bitowe tmp;
+    for(int i=N-1-ilosc; i>=0; i--){
+        tmp.pole[i+ilosc] = l.pole[i];
+    }
+    return tmp;
+}
+Bitowe operator>> (const Bitowe &l, int ilosc){
+    Bitowe tmp;
+    for(int i=ilosc; i<N; i++){
+        tmp.pole[i]=l.pole[i-ilosc];
+    }
+    return tmp;
+}
 
 
 /*istream &operator>>(istream &input, const Bitowe &p) {
