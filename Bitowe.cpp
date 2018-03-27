@@ -45,17 +45,18 @@ bool Bitowe::wczytajStringBinarny() {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
-    //s.reserve();
-    int koniec;
+    if(s.size()>N){
+        cout<<"Overload!"<<endl;
+        return false;
+    }
     if (znak == "-") {
         this->ujemna = true;
-    } else if(znak == "+"){
+    } else if (znak == "+") {
         this->ujemna = false;
     } else {
         cout << "Blad wprowadzania danych!" << endl;
         return false;
     }
-    //s.reserve();
     reverse(s.begin(), s.end());
     for (int i = 0; i < s.length(); i++) {
         if (s[i] == '0')
@@ -68,6 +69,7 @@ bool Bitowe::wczytajStringBinarny() {
             return false;
         }
     }
+    cout<<"Poprawnie wprowadzono"<<endl;
     return true;
 }
 
@@ -148,6 +150,8 @@ bool operator==(const Bitowe &l, const Bitowe &p) {
 ostream &operator<<(ostream &out, const Bitowe &p) {
     if (p.ujemna)
         out << "- ";
+    else
+        out << "+ ";
     for (int i = N - 1; i >= 0; i--)
         out << p.pole[i];
     return out;
@@ -297,6 +301,10 @@ void Bitowe::porownajLiczby(const Bitowe &l, const Bitowe &p) {
     }
 }
 void Bitowe::wypiszBinarnie() {
+    if(this->ujemna)
+        cout<<"- ";
+    else
+        cout<<"+ ";
     for (int i = N - 1; i >= 0; --i) {
         cout << this->pole[i];
     }
@@ -310,17 +318,17 @@ Bitowe Bitowe::modul() const {
     return tmp;
 }
 
-Bitowe operator<< (const Bitowe &l, int ilosc){
+Bitowe operator<<(const Bitowe &l, int ilosc) {
     Bitowe tmp;
-    for(int i=N-1-ilosc; i>=0; i--){
-        tmp.pole[i+ilosc] = l.pole[i];
+    for (int i = N - 1 - ilosc; i >= 0; i--) {
+        tmp.pole[i + ilosc] = l.pole[i];
     }
     return tmp;
 }
-Bitowe operator>> (const Bitowe &l, int ilosc){
+Bitowe operator>>(const Bitowe &l, int ilosc) {
     Bitowe tmp;
-    for(int i=ilosc; i<N; i++){
-        tmp.pole[i]=l.pole[i-ilosc];
+    for (int i = ilosc; i < N; i++) {
+        tmp.pole[i] = l.pole[i - ilosc];
     }
     return tmp;
 }

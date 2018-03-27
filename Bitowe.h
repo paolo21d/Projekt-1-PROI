@@ -11,6 +11,7 @@
 #define N 20
 
 class Bitowe {
+public:
     std::bitset<N> pole;
     bool ujemna;
 public:
