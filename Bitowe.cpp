@@ -225,8 +225,10 @@ Bitowe operator-(const Bitowe &l, const Bitowe &p) {
 
     Bitowe tmp;
     int tab[N];
+    cout<<"odejm"<<endl;
     /// jeszcze dodac warunki na 1) + (-) + l<p     2) - (-) + l<p
     if ((!l.ujemna && !p.ujemna && l.modul() > p.modul()) || (l.ujemna && p.ujemna && l.modul() > p.modul())) {
+        cout<<"++ ml>mp || -- ml>mp"<<endl;
         tmp.ujemna = l.ujemna;
         int c = 0;
         for (int i = 0; i < N; ++i) {
@@ -242,22 +244,26 @@ Bitowe operator-(const Bitowe &l, const Bitowe &p) {
         }
         return tmp;
     } else if (!l.ujemna && !p.ujemna && l.modul() < p.modul()) {
+        cout<<"++, ml < mp"<<endl;
         tmp = p - l;
         tmp.ujemna = true;
         return tmp;
     } else if (l.ujemna && p.ujemna && l.modul() < p.modul()) {
+        cout<<"-- ml<mp"<<endl;
         Bitowe pzast = p;
         pzast.ujemna = false;
         tmp = pzast + l;
         tmp.ujemna = false;
         return tmp;
     } else if (l.ujemna && !p.ujemna) {
+        cout<<"-+"<<endl;
         Bitowe lzast = l;
         lzast.ujemna = false;
         tmp = lzast + p;
         tmp.ujemna = true;
         return tmp;
     } else if (!l.ujemna && p.ujemna) {
+        cout<<"+-"<<endl;
         Bitowe pzast = p;
         pzast.ujemna = false;
         tmp = l + pzast;

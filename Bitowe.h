@@ -8,7 +8,7 @@
 #include <bitset>
 #include <iostream>
 
-#define N 20
+#define N 10
 
 class Bitowe {
 public:
