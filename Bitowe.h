@@ -11,7 +11,7 @@
 #define N 10
 
 class Bitowe {
-public:
+private:
 	std::bitset<N> pole;
 	bool ujemna;
 public:
@@ -29,6 +29,7 @@ public:
 	void wypiszBinarnie();
 	void wypiszDecymalnie();
 	Bitowe modul() const;
+	int liczbaZnaczacych() const;
 
 	friend std::ostream &operator<<(std::ostream &out, const Bitowe &p);
 	friend Bitowe operator+ (const Bitowe &l, const Bitowe &p);
@@ -38,6 +39,9 @@ public:
 	friend bool operator> (const Bitowe &l, const Bitowe &p);
 	friend bool operator< (const Bitowe &l, const Bitowe &p);
 	friend bool operator== (const Bitowe &l, const Bitowe &p);
+
+	friend Bitowe operator<<(const Bitowe &l, int ilosc);
+	friend Bitowe operator>>(const Bitowe &l, int ilosc);
 	//friend std::istream &operator>>(std::istream &input, const Bitowe &p);
 };
 

@@ -4,12 +4,14 @@
 
 #include <algorithm>
 #include <iostream>
+#include <vector>
 #include "Bitowe.h"
 
 using namespace std;
 
 Bitowe::Bitowe() {
 	pole.reset();
+	ujemna = false;
 }
 
 Bitowe::Bitowe(std::bitset<N> lista) {
@@ -25,6 +27,7 @@ Bitowe::Bitowe(string var) {
 
 Bitowe::Bitowe(long long liczba) {
 	int i = 0;
+	ujemna = false;
 	if (liczba < 0) {
 		liczba = -liczba;
 		ujemna = true;
@@ -34,7 +37,6 @@ Bitowe::Bitowe(long long liczba) {
 		liczba %= 2;
 		i++;
 	}
-	ujemna = false;
 }
 
 bool Bitowe::wczytajStringBinarny() {
@@ -71,6 +73,9 @@ bool Bitowe::wczytajStringBinarny() {
 			return false;
 		}
 	}
+	//sprawdzenie - 0
+	if (this->modul() == Bitowe() && this->ujemna)
+		this->ujemna = false;
 	cout << "Poprawnie wprowadzono" << endl;
 	return true;
 }
@@ -93,37 +98,11 @@ Bitowe &Bitowe::operator=(const Bitowe &p) {
 	return *this;
 }
 
-/*Bitowe Bitowe::operator+(const Bitowe &p) {
-int carry = 0;
-bitset<N> tmp;
-tmp.reset();
-if ((this->ujemna == 0 && !p.ujemna) || (this->ujemna == 1 && p.ujemna)) {
-for (int i = 0; i < N; i++) {
-carry = p.pole[i] + this->pole[i] + carry;
-tmp[i] = carry % 2;
-carry -= tmp[i];
-carry /= 2;
-}
-if (carry != 0) {
-cout << "Overload!" << endl;
-return *this;
-}
-for (int i = 0; i < N; ++i) {
-this->pole[i] = tmp[i];
-}
-return *this;
-} else if (this->ujemna == 1 && !p.ujemna) {
-this->ujemna = 0;
-*this = p - *this;
-} else if (this->ujemna == 0 && p.ujemna) {
-
-}
-}*/
-
 ///////Porownywanie
 bool operator>(const Bitowe &l, const Bitowe &p) {
 	if (l.ujemna && !p.ujemna)
 		return false;
+
 	for (int i = N - 1; i >= 0; i--) {
 		if (l.pole[i] == 1 && p.pole[i] == 0)
 			return true;
@@ -164,32 +143,6 @@ ostream &operator<<(ostream &out, const Bitowe &p) {
 }
 //////Operatory arytmetyczne
 Bitowe operator+(const Bitowe &l, const Bitowe &p) {
-	/*int carry = 0;
-	bitset<N> tmp;
-	tmp.reset();
-	if ((!l.ujemna && !p.ujemna) || (l.ujemna && p.ujemna)) {
-	for (int i = 0; i < N; i++) {
-	carry = p.pole[i] + l.pole[i] + carry;
-	tmp[i] = carry % 2;
-	carry -= tmp[i];
-	carry /= 2;
-	}
-	if (carry != 0) {
-	cout << "Overload!" << endl;
-	return l;
-	}
-	for (int i = 0; i < N; ++i) {
-	this->pole[i] = tmp[i];
-	}
-	return Bitowe(tmp);
-	} else if (l.ujemna && !p.ujemna) {
-	this->ujemna = 0;
-	*this = p - l;
-	} else if (!l.ujemna && p.ujemna) {
-
-	}*/
-
-
 	Bitowe tmp;
 	if ((!l.ujemna && !p.ujemna) || (l.ujemna && p.ujemna)) {
 		int c = 0;
@@ -220,21 +173,12 @@ Bitowe operator+(const Bitowe &l, const Bitowe &p) {
 }
 
 Bitowe operator-(const Bitowe &l, const Bitowe &p) {
-	/* int carry = 0;
-	bitset<N> temp;
-	temp.reset();
-	if ((!l.ujemna && !p.ujemna) || (l.ujemna && p.ujemna)) {
-
-	} else if (l.ujemna && !p.ujemna) {
-
-	} else if (!l.ujemna && p.ujemna) {
-
-	}*/
-
 	Bitowe tmp;
 	int tab[N];
 	//cout << "odejm" << endl;
-	if ((!l.ujemna && !p.ujemna && l.modul() > p.modul()) || (l.ujemna && p.ujemna && l.modul() > p.modul())) {
+	if ((!l.ujemna && !p.ujemna && l.modul() == p.modul()) || (l.ujemna && p.ujemna && l.modul() == p.modul()) || (l.modul() == p.modul() && l.modul() == tmp)) {
+		return tmp;
+	}else if ((!l.ujemna && !p.ujemna && l.modul() > p.modul()) || (l.ujemna && p.ujemna && l.modul() > p.modul())) {
 		//cout << "++ ml>mp || -- ml>mp" << endl;
 		tmp.ujemna = l.ujemna;
 		int c = 0;
@@ -284,11 +228,65 @@ Bitowe operator-(const Bitowe &l, const Bitowe &p) {
 }
 
 Bitowe operator*(const Bitowe &l, const Bitowe &p) {
-	return Bitowe();
+	Bitowe tmp;
+	Bitowe lkopia = l.modul();
+	if (l.liczbaZnaczacych() + p.liczbaZnaczacych() > N) {
+		cout << "Overload!!" << endl;
+		return	 tmp;
+	}
+	////////
+	for (int i = 0; i < N; i++) {
+		if (p.pole[i] == 0) {
+			continue;
+		}
+		else {
+			tmp = tmp + (lkopia<<i);
+		}
+	}
+
+	if (l.ujemna != p.ujemna)
+		tmp.ujemna = true;
+	else
+		tmp.ujemna = false;
+	return tmp;
 }
 
 Bitowe operator/(const Bitowe &l, const Bitowe &p) {
-	return Bitowe();
+	Bitowe tmp;
+	vector <bool> tab;
+	Bitowe dzielnik = p.modul();
+	Bitowe dzielna = l.modul();
+	if (dzielnik == tmp) {
+		cout << "Nie mozna dzielic przez 0!!!!!" << endl;
+		return tmp;
+	}
+	if (l.liczbaZnaczacych() < p.liczbaZnaczacych())
+		return tmp;
+	dzielnik = dzielnik << (dzielna.liczbaZnaczacych() - dzielnik.liczbaZnaczacych());
+	while (true) {
+		if (dzielna > dzielnik || dzielna == dzielnik) {
+			tab.push_back(true);
+			dzielna = dzielna - dzielnik;
+			dzielnik = dzielnik >> 1;
+		}
+		else {
+			tab.push_back(false);
+			dzielnik = dzielnik >> 1;
+		}
+
+		if (dzielnik < p.modul())
+			break;
+	}
+	reverse(tab.begin(), tab.end());
+	for (int i = 0; i < tab.size(); i++) {
+		tmp.pole[i] = tab[i];
+	}
+	/////////
+	if (l.ujemna != p.ujemna)
+		tmp.ujemna = true;
+	else
+		tmp.ujemna = false;
+	return tmp;
 }
 void Bitowe::porownajLiczby(const Bitowe &l, const Bitowe &p) {
 	/*if (l == p) {
@@ -338,6 +336,15 @@ Bitowe Bitowe::modul() const {
 	tmp.ujemna = false;
 	return tmp;
 }
+int Bitowe::liczbaZnaczacych() const {
+	int ilosc = 0;
+	for (int i = N - 1; i >= 0; i--, ilosc++) {
+		if (this->pole[i] == true)
+			break;
+	}
+	return N - ilosc;
+}
+
 
 Bitowe operator<<(const Bitowe &l, int ilosc) {
 	Bitowe tmp;
@@ -346,10 +353,10 @@ Bitowe operator<<(const Bitowe &l, int ilosc) {
 	}
 	return tmp;
 }
-Bitowe operator >> (const Bitowe &l, int ilosc) {
+Bitowe operator>> (const Bitowe &l, int ilosc) {
 	Bitowe tmp;
-	for (int i = ilosc; i < N; i++) {
-		tmp.pole[i] = l.pole[i - ilosc];
+	for (int i = 0; i < N-ilosc; i++) {
+		tmp.pole[i] = l.pole[i + ilosc];
 	}
 	return tmp;
 }

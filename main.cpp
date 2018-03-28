@@ -84,10 +84,46 @@ int main() {
 			cout << endl;
 		}
 		else if (opcja == 5) { //monozenie
+			cout << "Podaj numery liczb ktore chcesz pomnozyc. ";
+			while (!(cin >> num1 >> num2)) {
+				cout << "Blad podaj jeszcze raz!" << endl;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			}
 
+			if (num1 < 0 || num1 > lista.size() || num2 < 0 || num2 > lista.size()) {
+				cout << "Bledne numery liczb!!" << endl;
+				continue;
+			}
+			cout << "Mnozenie:" << endl;
+			Bitowe iloczyn = lista[num1] * lista[num2];
+			lista[num1].wypiszBinarnie();
+			cout << " * (";
+			lista[num2].wypiszBinarnie();
+			cout << ") = ";
+			iloczyn.wypiszBinarnie();
+			cout << endl;
 		}
 		else if (opcja == 6) { //dzielenie
+			cout << "Podaj numery liczb ktore chcesz podzielic. ";
+			while (!(cin >> num1 >> num2)) {
+				cout << "Blad podaj jeszcze raz!" << endl;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			}
 
+			if (num1 < 0 || num1 > lista.size() || num2 < 0 || num2 > lista.size()) {
+				cout << "Bledne numery liczb!!" << endl;
+				continue;
+			}
+			cout << "Dzielenie:" << endl;
+			Bitowe iloraz = lista[num1] / lista[num2];
+			lista[num1].wypiszBinarnie();
+			cout << " / (";
+			lista[num2].wypiszBinarnie();
+			cout << ") = ";
+			iloraz.wypiszBinarnie();
+			cout << endl;
 		}
 		else if (opcja == 7) { //porowananie
 			cout << "Podaj numery liczb ktore chcesz porownac. ";
@@ -117,7 +153,7 @@ int main() {
 			cout << "Lista liczb:" << endl;
 			for (int i = 0; i < lista.size(); ++i) {
 				cout << i << ": ";
-				lista[i].wypiszDecymalnie();
+				//lista[i].wypiszDecymalnie();
 				cout << endl;
 			}
 		}
@@ -130,6 +166,7 @@ int main() {
 			}
 		}
 		else if (opcja == 0) { //zamknij program
+			//cout << lista.back().liczbaZnaczacych();
 			break;
 		}
 		else { //blad wprowadzania
